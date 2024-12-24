@@ -153,28 +153,18 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Основной запуск бота
 def main():
     TOKEN = os.getenv("TELEGRAM_TOKEN")
-    WEBHOOK_URL = os.getenv("WEBHOOK_URL")
-    PORT = int(os.getenv("PORT", 8443))
-
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # URL вашего Webhook
+    PORT = int(os.getenv("PORT", 8443))  # Порт для Webhook
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(handle_answer))
 
-    async def run_app():
-        await app.initialize()
-        await app.bot.delete_webhook(drop_pending_updates=True)
-        await app.start()
-        await app.updater.start_webhook(
-            listen="0.0.0.0",
-            port=PORT,
-            url_path=TOKEN,
-            webhook_url=WEBHOOK_URL,
-        )
-        await app.updater.idle()
-
-    import asyncio
-    asyncio.run(run_app())
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        webhook_url=WEBHOOK_URL
+    )
 
 if __name__ == "__main__":
     main()
