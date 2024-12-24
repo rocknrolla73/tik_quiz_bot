@@ -124,8 +124,7 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Проверяем правильность ответа
     if user_response == question_data["correct_option"]:
-        # Учитываем вес вопроса
-        points = question_data.get("weight", 1)  # Если weight отсутствует, берём 1 по умолчанию
+        points = question_data.get("weight", 1)
         user_data[user_id]["score"] += points
         await query.edit_message_text(f"Правильно! Вы заработали {points} баллов. Ваш текущий счёт за локацию: {user_data[user_id]['score']}")
     else:
@@ -137,9 +136,9 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_data[user_id]["current_question"] += 1
         await send_question(query, context)
     else:
-        user_data[user_id]["total_score"] += user_data[user_id]["score"]  # Обновляем общий счёт
-        total_score = user_data[user_id]["total_score"]  # Общий счёт
-        location_score = user_data[user_id]["score"]  # Счёт за текущую локацию
+        user_data[user_id]["total_score"] += user_data[user_id]["score"]
+        total_score = user_data[user_id]["total_score"]
+        location_score = user_data[user_id]["score"]
 
         await query.message.reply_text(
             f"Викторина для текущей локации завершена! Ваш счёт за локацию: {location_score}\n"
@@ -151,30 +150,31 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
         del user_data[user_id]["score"]
         del user_data[user_id]["questions"]
 
-# Удаление Webhook
-async def delete_webhook(app):
-    await app.bot.delete_webhook(drop_pending_updates=True)
-
 # Основной запуск бота
-async def main():
+def main():
     TOKEN = os.getenv("TELEGRAM_TOKEN")
-    WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # URL вашего Webhook
-    PORT = int(os.getenv("PORT", 8443))  # Порт для Webhook
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+    PORT = int(os.getenv("PORT", 8443))
+
     app = ApplicationBuilder().token(TOKEN).build()
 
-    # Удаляем существующий Webhook
-    await delete_webhook(app)
-
-    app.add_handler(CommandHandler("start", start))  # Убрали pass_args
+    app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(handle_answer))
 
-    # Настройка Webhook
-    app.run_webhook(
-        listen="0.0.0.0",
-        port=PORT,
-        webhook_url=WEBHOOK_URL
-    )
+    async def run_app():
+        await app.initialize()
+        await app.bot.delete_webhook(drop_pending_updates=True)
+        await app.start()
+        await app.updater.start_webhook(
+            listen="0.0.0.0",
+            port=PORT,
+            url_path=TOKEN,
+            webhook_url=WEBHOOK_URL,
+        )
+        await app.updater.idle()
+
+    import asyncio
+    asyncio.run(run_app())
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    main()
