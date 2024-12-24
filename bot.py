@@ -31,8 +31,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_question(update, context)
 
 # Отправка текущего вопроса
-async def send_question(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
+async def send_question(update_or_query, context: ContextTypes.DEFAULT_TYPE):
+    # Определяем, это Update (команда /start) или CallbackQuery (ответ на вопрос)
+    if isinstance(update_or_query, Update):
+        user_id = update_or_query.effective_user.id
+        message = update_or_query.message
+    else:  # Это CallbackQuery
+        user_id = update_or_query.from_user.id
+        message = update_or_query.message
+
     current_question_index = user_data[user_id]["current_question"]
     question_data = questions[current_question_index]
 
@@ -43,7 +50,7 @@ async def send_question(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await update.message.reply_text(
+    await message.reply_text(
         question_data["question"],
         reply_markup=reply_markup
     )
@@ -74,7 +81,7 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Переходим к следующему вопросу или завершаем викторину
     if current_question_index + 1 < len(questions):
         user_data[user_id]["current_question"] += 1
-        await send_question(query.message, context)
+        await send_question(query, context)
     else:
         await query.message.reply_text(
             f"Викторина завершена! Ваш итоговый счет: {user_data[user_id]['score']}"
