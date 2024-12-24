@@ -1,6 +1,7 @@
 import os
+from datetime import datetime
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, MessageHandler, ContextTypes, filters
 
 # Названия баров
 bar_names = {
@@ -53,6 +54,20 @@ user_data = {}
 
 # Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+
+    if user_id not in user_data:
+        user_data[user_id] = {"total_score": 0}
+        user_name = update.effective_user.first_name or update.effective_user.username or "Игрок"
+        user_data[user_id]["username"] = user_name
+        await update.message.reply_text(
+            f"Привет, {user_name}! Добро пожаловать в викторину. Выберите бар, чтобы начать."
+        )
+    else:
+        await update.message.reply_text("Вы уже зарегистрированы! Используйте ссылку для начала викторины.")
+
+# Запуск викторины
+async def start_quiz(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = context.args  # Получаем аргументы команды /start
     user_id = update.effective_user.id
 
@@ -60,18 +75,20 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         block_key = args[0]  # Аргумент (например, "bar1")
         if block_key in questions_blocks:
             if user_id not in user_data:
-                # Если пользователь запускает бота впервые
-                user_data[user_id] = {"total_score": 0}  # Общий счёт
+                await update.message.reply_text("Вы не зарегистрированы. Используйте команду /start для начала.")
+                return
+
             user_data[user_id]["current_question"] = 0
             user_data[user_id]["score"] = 0  # Счёт за текущую локацию
+            user_data[user_id]["fastest_user"] = None
+            user_data[user_id]["fastest_time"] = float("inf")  # Устанавливаем бесконечное время
             user_data[user_id]["questions"] = questions_blocks[block_key]
 
-            bar_name = bar_names.get(block_key, "Unknown Bar")  # Получаем имя бара
-            await update.message.reply_text(f"Добро пожаловать в викторину для {bar_name}!")
+            bar_name = bar_names.get(block_key, "Unknown Bar")
+            await update.message.reply_text(f"Начинаем викторину для {bar_name}!")
             await send_question(update, context)
             return
 
-    # Если параметр некорректен
     await update.message.reply_text("Неверная ссылка или команда. Попробуйте снова.")
 
 # Отправка текущего вопроса
@@ -86,6 +103,9 @@ async def send_question(update_or_query, context: ContextTypes.DEFAULT_TYPE):
     current_question_index = user_data[user_id]["current_question"]
     questions = user_data[user_id]["questions"]
     question_data = questions[current_question_index]
+
+    # Фиксируем время отправки вопроса
+    user_data[user_id]["question_start_time"] = datetime.now()
 
     # Если у вопроса есть медиа, отправляем его
     if "media" in question_data:
@@ -122,42 +142,58 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     questions = user_data[user_id]["questions"]
     question_data = questions[current_question_index]
 
+    # Вычисляем время ответа
+    answer_time = datetime.now()
+    question_start_time = user_data[user_id].get("question_start_time")
+    time_taken = (answer_time - question_start_time).total_seconds()
+
     # Проверяем правильность ответа
     if user_response == question_data["correct_option"]:
         points = question_data.get("weight", 1)
         user_data[user_id]["score"] += points
-        await query.edit_message_text(f"Правильно! Вы заработали {points} баллов. Ваш текущий счёт за локацию: {user_data[user_id]['score']}")
+        await query.edit_message_text(
+            f"Правильно! Вы заработали {points} баллов.\n"
+            f"Ваше время ответа: {time_taken:.2f} секунд."
+        )
     else:
         await query.edit_message_text(
-            f"Неверно. Правильный ответ: {question_data['options'][question_data['correct_option']]}"
+            f"Неверно. Правильный ответ: {question_data['options'][question_data['correct_option']]}\n"
+            f"Ваше время ответа: {time_taken:.2f} секунд."
         )
+
+    # Обновляем самого быстрого игрока
+    if time_taken < user_data[user_id]["fastest_time"]:
+        user_data[user_id]["fastest_time"] = time_taken
+        user_data[user_id]["fastest_user"] = user_id
 
     if current_question_index + 1 < len(questions):
         user_data[user_id]["current_question"] += 1
         await send_question(query, context)
     else:
-        user_data[user_id]["total_score"] += user_data[user_id]["score"]
-        total_score = user_data[user_id]["total_score"]
-        location_score = user_data[user_id]["score"]
+        fastest_user_id = user_data[user_id]["fastest_user"]
+        fastest_time = user_data[user_id]["fastest_time"]
+        fastest_user_name = user_data[fastest_user_id]["username"]
 
         await query.message.reply_text(
-            f"Викторина для текущей локации завершена! Ваш счёт за локацию: {location_score}\n"
-            f"Общий счёт за все локации: {total_score}"
+            f"Викторина завершена!\n"
+            f"Ваш счёт за локацию: {user_data[user_id]['score']}\n"
+            f"Самый быстрый игрок: {fastest_user_name} ({fastest_time:.2f} секунд)."
         )
 
         # Очищаем данные текущей локации
         del user_data[user_id]["current_question"]
-        del user_data[user_id]["score"]
         del user_data[user_id]["questions"]
 
 # Основной запуск бота
 def main():
     TOKEN = os.getenv("TELEGRAM_TOKEN")
-    WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # URL вашего Webhook
-    PORT = int(os.getenv("PORT", 8443))  # Порт для Webhook
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+    PORT = int(os.getenv("PORT", 8443))
+
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("quiz", start_quiz))
     app.add_handler(CallbackQueryHandler(handle_answer))
 
     app.run_webhook(
