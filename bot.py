@@ -8,7 +8,8 @@ def start(update: Update, context: CallbackContext):
 # Основной запуск бота
 def main():
     # Вставьте токен от BotFather
-    TOKEN = "7961347762:AAEy15H8JNbqazzEzAfOVU3IyxvQyGwxHpE"
+import os
+    TOKEN = os.getenv("TELEGRAM_TOKEN")
 
     # Создаем объект Updater
     updater = Updater(TOKEN)
