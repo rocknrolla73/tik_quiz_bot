@@ -15,28 +15,28 @@ bar_names = {
 # Вопросы по блокам
 questions_blocks = {
     "bar1": [
-        {"question": "Какой напиток самый популярный в мире?", "options": ["Чай", "Кофе", "Вода", "Вино"], "correct_option": 0},
-        {"question": "Сколько планет в солнечной системе?", "options": ["7", "8", "9", "10"], "correct_option": 1}
+        {"question": "Какой напиток самый популярный в мире?", "options": ["Чай", "Кофе", "Вода", "Вино"], "correct_option": 0, "weight": 1},
+        {"question": "Сколько планет в солнечной системе?", "options": ["7", "8", "9", "10"], "correct_option": 1, "weight": 2}
     ],
     "bar2": [
-        {"question": "Кто написал роман 'Война и мир'?", "options": ["Достоевский", "Пушкин", "Толстой", "Чехов"], "correct_option": 2},
-        {"question": "Как называется столица Казахстана?", "options": ["Алматы", "Астана", "Шымкент", "Караганда"], "correct_option": 1}
+        {"question": "Кто написал роман 'Война и мир'?", "options": ["Достоевский", "Пушкин", "Толстой", "Чехов"], "correct_option": 2, "weight": 3},
+        {"question": "Как называется столица Казахстана?", "options": ["Алматы", "Астана", "Шымкент", "Караганда"], "correct_option": 1, "weight": 1}
     ],
     "bar3": [
-        {"question": "Какой химический элемент обозначается символом 'O'?", "options": ["Кислород", "Азот", "Водород", "Кальций"], "correct_option": 0},
-        {"question": "В каком году закончилась Вторая мировая война?", "options": ["1941", "1945", "1946", "1950"], "correct_option": 1}
+        {"question": "Какой химический элемент обозначается символом 'O'?", "options": ["Кислород", "Азот", "Водород", "Кальций"], "correct_option": 0, "weight": 2},
+        {"question": "В каком году закончилась Вторая мировая война?", "options": ["1941", "1945", "1946", "1950"], "correct_option": 1, "weight": 2}
     ],
     "bar4": [
-        {"question": "Сколько хромосом у человека?", "options": ["23", "32", "46", "64"], "correct_option": 2},
-        {"question": "Какой язык программирования используют для Telegram-ботов?", "options": ["Python", "C++", "Java", "Go"], "correct_option": 0}
+        {"question": "Сколько хромосом у человека?", "options": ["23", "32", "46", "64"], "correct_option": 2, "weight": 2},
+        {"question": "Какой язык программирования используют для Telegram-ботов?", "options": ["Python", "C++", "Java", "Go"], "correct_option": 0, "weight": 1}
     ],
     "bar5": [
-        {"question": "Как называется самая длинная река в мире?", "options": ["Амазонка", "Нил", "Янцзы", "Волга"], "correct_option": 1},
-        {"question": "Как зовут создателя компании Tesla?", "options": ["Стив Джобс", "Илон Маск", "Джефф Безос", "Билл Гейтс"], "correct_option": 1}
+        {"question": "Как называется самая длинная река в мире?", "options": ["Амазонка", "Нил", "Янцзы", "Волга"], "correct_option": 1, "weight": 3},
+        {"question": "Как зовут создателя компании Tesla?", "options": ["Стив Джобс", "Илон Маск", "Джефф Безос", "Билл Гейтс"], "correct_option": 1, "weight": 2}
     ],
     "bar6": [
-        {"question": "Какая планета ближе всего к Солнцу?", "options": ["Земля", "Венера", "Марс", "Меркурий"], "correct_option": 3},
-        {"question": "В какой стране изобрели пиццу?", "options": ["Франция", "Италия", "Испания", "Греция"], "correct_option": 1}
+        {"question": "Какая планета ближе всего к Солнцу?", "options": ["Земля", "Венера", "Марс", "Меркурий"], "correct_option": 3, "weight": 1},
+        {"question": "В какой стране изобрели пиццу?", "options": ["Франция", "Италия", "Испания", "Греция"], "correct_option": 1, "weight": 2}
     ]
 }
 
@@ -105,9 +105,12 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     questions = user_data[user_id]["questions"]
     question_data = questions[current_question_index]
 
+    # Проверяем правильность ответа
     if user_response == question_data["correct_option"]:
-        user_data[user_id]["score"] += 1
-        await query.edit_message_text(f"Правильно! Ваш текущий счёт за локацию: {user_data[user_id]['score']}")
+        # Учитываем вес вопроса
+        points = question_data.get("weight", 1)  # Если weight отсутствует, берём 1 по умолчанию
+        user_data[user_id]["score"] += points
+        await query.edit_message_text(f"Правильно! Вы заработали {points} баллов. Ваш текущий счёт за локацию: {user_data[user_id]['score']}")
     else:
         await query.edit_message_text(
             f"Неверно. Правильный ответ: {question_data['options'][question_data['correct_option']]}"
