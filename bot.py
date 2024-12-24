@@ -114,7 +114,7 @@ def main():
     TOKEN = os.getenv("TELEGRAM_TOKEN")
     app = ApplicationBuilder().token(TOKEN).build()
 
-    app.add_handler(CommandHandler("start", start, pass_args=True))
+    app.add_handler(CommandHandler("start", start))  # Убрали pass_args
     app.add_handler(CallbackQueryHandler(handle_answer))
 
     app.run_polling()
