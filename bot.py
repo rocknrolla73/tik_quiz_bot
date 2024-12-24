@@ -30,26 +30,14 @@ questions_blocks = {
             "weight": 2,
             "media": "https://museum-21.su/upload/iblock/a2d/cu5nmj88d9uahq2bdxi3bxx7x6ut5qaa.jpg"
         }
-    ],
-    "bar2": [
-        {
-            "question": "Кто написал роман 'Война и мир'?",
-            "options": ["Достоевский", "Пушкин", "Толстой", "Чехов"],
-            "correct_option": 2,
-            "weight": 3,
-            "media": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Lev_Nikolayevich_Tolstoy_in_1910_by_Vladimir_Chertkov.jpg/548px-Lev_Nikolayevich_Tolstoy_in_1910_by_Vladimir_Chertkov.jpg"
-        },
-        {
-            "question": "Как называется столица Казахстана?",
-            "options": ["Алматы", "Астана", "Шымкент", "Караганда"],
-            "correct_option": 1,
-            "weight": 1
-        }
     ]
 }
 
 # Состояние пользователей
 user_data = {}
+
+# ID администратора (замените на свой Telegram ID)
+ADMIN_ID = int(os.getenv("ADMIN_ID", 53914223))
 
 # Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -182,6 +170,23 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
         del user_data[user_id]["questions"]
         del user_data[user_id]["total_time"]
 
+# Команда /results (только для администратора)
+async def show_results(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    if user_id != ADMIN_ID:
+        await update.message.reply_text("У вас нет прав для использования этой команды.")
+        return
+
+    if not user_data:
+        await update.message.reply_text("Никто ещё не зарегистрировался в викторине.")
+        return
+
+    results = "Результаты участников:\n"
+    for uid, data in user_data.items():
+        results += f"Игрок: {data['username']}, Общий счёт: {data['total_score']}.\n"
+
+    await update.message.reply_text(results)
+
 # Основной запуск бота
 def main():
     TOKEN = os.getenv("TELEGRAM_TOKEN")
@@ -192,6 +197,7 @@ def main():
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(handle_answer))
+    app.add_handler(CommandHandler("results", show_results))
 
     app.run_webhook(
         listen="0.0.0.0",
