@@ -1,26 +1,24 @@
 import os
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 # Команда /start
-def start(update: Update, context: CallbackContext):
-    update.message.reply_text(f"Привет, {update.message.from_user.first_name}! Добро пожаловать в Tik Quiz!")
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(f"Привет, {update.message.from_user.first_name}! Добро пожаловать в Tik Quiz!")
 
 # Основной запуск бота
 def main():
     # Получаем токен из переменной окружения
     TOKEN = os.getenv("TELEGRAM_TOKEN")
 
-    # Создаем объект Updater
-    updater = Updater(TOKEN)
+    # Создаем объект Application
+    app = ApplicationBuilder().token(TOKEN).build()
 
     # Регистрируем обработчик команды /start
-    dp = updater.dispatcher
-    dp.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("start", start))
 
     # Запускаем бота
-    updater.start_polling()
-    updater.idle()
+    app.run_polling()
 
 if __name__ == "__main__":
     main()
