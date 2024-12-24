@@ -28,7 +28,7 @@ questions_blocks = {
             "options": ["7", "8", "9", "10"],
             "correct_option": 1,
             "weight": 2,
-            "media": "https://upload.wikimedia.org/wikipedia/commons/9/95/Solar_sys8.jpg"
+            "media": "https://museum-21.su/upload/iblock/a2d/cu5nmj88d9uahq2bdxi3bxx7x6ut5qaa.jpg"
         }
     ],
     "bar2": [
@@ -37,7 +37,7 @@ questions_blocks = {
             "options": ["Достоевский", "Пушкин", "Толстой", "Чехов"],
             "correct_option": 2,
             "weight": 3,
-            "media": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Leo_Tolstoy_1897%2C_black_and_white.jpg"
+            "media": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Lev_Nikolayevich_Tolstoy_in_1910_by_Vladimir_Chertkov.jpg/548px-Lev_Nikolayevich_Tolstoy_in_1910_by_Vladimir_Chertkov.jpg"
         },
         {
             "question": "Как называется столица Казахстана?",
