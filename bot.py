@@ -1,3 +1,4 @@
+import os
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext
 
@@ -7,8 +8,7 @@ def start(update: Update, context: CallbackContext):
 
 # Основной запуск бота
 def main():
-    # Вставьте токен от BotFather
-import os
+    # Получаем токен из переменной окружения
     TOKEN = os.getenv("TELEGRAM_TOKEN")
 
     # Создаем объект Updater
