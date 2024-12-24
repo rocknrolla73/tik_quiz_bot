@@ -7,7 +7,7 @@ questions = [
     {
         "question": "Какой напиток самый популярный в мире?",
         "options": ["Чай", "Кофе", "Вода", "Вино"],
-        "correct_option": 0  # Индекс правильного ответа
+        "correct_option": 0
     },
     {
         "question": "Сколько планет в солнечной системе?",
@@ -27,23 +27,21 @@ user_data = {}
 # Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-    user_data[user_id] = {"current_question": 0, "score": 0}  # Инициализируем состояние пользователя
+    user_data[user_id] = {"current_question": 0, "score": 0}
     await send_question(update, context)
 
 # Отправка текущего вопроса
 async def send_question(update_or_query, context: ContextTypes.DEFAULT_TYPE):
-    # Определяем, это Update (команда /start) или CallbackQuery (ответ на вопрос)
     if isinstance(update_or_query, Update):
         user_id = update_or_query.effective_user.id
         message = update_or_query.message
-    else:  # Это CallbackQuery
+    else:
         user_id = update_or_query.from_user.id
         message = update_or_query.message
 
     current_question_index = user_data[user_id]["current_question"]
     question_data = questions[current_question_index]
 
-    # Создаем кнопки с вариантами ответов
     keyboard = [
         [InlineKeyboardButton(option, callback_data=str(i))]
         for i, option in enumerate(question_data["options"])
@@ -61,7 +59,7 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     user_id = query.from_user.id
-    if user_id not in user_data:  # Проверяем, есть ли пользователь в user_data
+    if user_id not in user_data:
         await query.message.reply_text("Произошла ошибка. Попробуйте снова отправить команду /start.")
         return
 
@@ -69,7 +67,6 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     current_question_index = user_data[user_id]["current_question"]
     question_data = questions[current_question_index]
 
-    # Проверяем правильность ответа
     if user_response == question_data["correct_option"]:
         user_data[user_id]["score"] += 1
         await query.edit_message_text(f"Правильно! Ваш текущий счет: {user_data[user_id]['score']}")
@@ -78,7 +75,6 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"Неверно. Правильный ответ: {question_data['options'][question_data['correct_option']]}"
         )
 
-    # Переходим к следующему вопросу или завершаем викторину
     if current_question_index + 1 < len(questions):
         user_data[user_id]["current_question"] += 1
         await send_question(query, context)
@@ -86,19 +82,23 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.message.reply_text(
             f"Викторина завершена! Ваш итоговый счет: {user_data[user_id]['score']}"
         )
-        # Удаляем данные пользователя после завершения
         del user_data[user_id]
 
 # Основной запуск бота
 def main():
-    TOKEN = os.getenv("TELEGRAM_TOKEN")  # Получаем токен из переменной окружения
+    TOKEN = os.getenv("TELEGRAM_TOKEN")
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # URL вашего Webhook
     app = ApplicationBuilder().token(TOKEN).build()
 
-    # Регистрируем обработчики команд и ответов
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(handle_answer))
 
-    app.run_polling()
+    # Настройка Webhook
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=int(os.getenv("PORT", 8443)),
+        webhook_url=WEBHOOK_URL
+    )
 
 if __name__ == "__main__":
     main()
