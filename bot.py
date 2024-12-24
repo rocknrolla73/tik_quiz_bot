@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, MessageHandler, ContextTypes, filters
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # Названия баров
 bar_names = {
@@ -21,14 +21,14 @@ questions_blocks = {
             "options": ["Чай", "Кофе", "Вода", "Вино"],
             "correct_option": 0,
             "weight": 1,
-            "media": "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"  # Гифка
+            "media": "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"
         },
         {
             "question": "Сколько планет в солнечной системе?",
             "options": ["7", "8", "9", "10"],
             "correct_option": 1,
             "weight": 2,
-            "media": "https://museum-21.su/upload/iblock/a2d/cu5nmj88d9uahq2bdxi3bxx7x6ut5qaa.jpg"  # Изображение
+            "media": "https://museum-21.su/upload/iblock/a2d/cu5nmj88d9uahq2bdxi3bxx7x6ut5qaa.jpg"
         }
     ],
     "bar2": [
@@ -37,7 +37,7 @@ questions_blocks = {
             "options": ["Достоевский", "Пушкин", "Толстой", "Чехов"],
             "correct_option": 2,
             "weight": 3,
-            "media": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI-dFGIQNA-8NmQPrQugDxmkAiD4DLEQDvmQ&s"  # Фото Толстого
+            "media": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Lev_Nikolayevich_Tolstoy_in_1910_by_Vladimir_Chertkov.jpg/548px-Lev_Nikolayevich_Tolstoy_in_1910_by_Vladimir_Chertkov.jpg"
         },
         {
             "question": "Как называется столица Казахстана?",
@@ -46,7 +46,6 @@ questions_blocks = {
             "weight": 1
         }
     ]
-    # Добавьте остальные блоки для баров 3-6
 }
 
 # Состояние пользователей
@@ -54,34 +53,32 @@ user_data = {}
 
 # Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    args = context.args  # Получаем аргументы из команды /start
     user_id = update.effective_user.id
 
+    # Проверяем, если пользователь уже зарегистрирован
     if user_id not in user_data:
-        user_data[user_id] = {"total_score": 0}
         user_name = update.effective_user.first_name or update.effective_user.username or "Игрок"
-        user_data[user_id]["username"] = user_name
+        user_data[user_id] = {
+            "total_score": 0,
+            "username": user_name
+        }
         await update.message.reply_text(
-            f"Привет, {user_name}! Добро пожаловать в викторину. Выберите бар, чтобы начать."
+            f"Привет, {user_name}! Вы успешно зарегистрированы. Начинаем викторину!"
         )
     else:
-        await update.message.reply_text("Вы уже зарегистрированы! Используйте ссылку для начала викторины.")
+        await update.message.reply_text(
+            "Добро пожаловать обратно! Начинаем викторину!"
+        )
 
-# Запуск викторины
-async def start_quiz(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    args = context.args  # Получаем аргументы команды /start
-    user_id = update.effective_user.id
-
+    # Проверяем наличие аргумента для запуска викторины
     if args:
         block_key = args[0]  # Аргумент (например, "bar1")
         if block_key in questions_blocks:
-            if user_id not in user_data:
-                await update.message.reply_text("Вы не зарегистрированы. Используйте команду /start для начала.")
-                return
-
             user_data[user_id]["current_question"] = 0
-            user_data[user_id]["score"] = 0  # Счёт за текущую локацию
+            user_data[user_id]["score"] = 0
             user_data[user_id]["fastest_user"] = None
-            user_data[user_id]["fastest_time"] = float("inf")  # Устанавливаем бесконечное время
+            user_data[user_id]["fastest_time"] = float("inf")
             user_data[user_id]["questions"] = questions_blocks[block_key]
 
             bar_name = bar_names.get(block_key, "Unknown Bar")
@@ -89,7 +86,10 @@ async def start_quiz(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await send_question(update, context)
             return
 
-    await update.message.reply_text("Неверная ссылка или команда. Попробуйте снова.")
+    # Если аргумент отсутствует или неверен
+    await update.message.reply_text(
+        "Для начала викторины отсканируйте QR-код или используйте правильную ссылку."
+    )
 
 # Отправка текущего вопроса
 async def send_question(update_or_query, context: ContextTypes.DEFAULT_TYPE):
@@ -193,7 +193,6 @@ def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("quiz", start_quiz))
     app.add_handler(CallbackQueryHandler(handle_answer))
 
     app.run_webhook(
