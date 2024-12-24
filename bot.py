@@ -159,6 +159,9 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
         total_time = user_data[user_id]["total_time"]  # Суммарное время
         location_score = user_data[user_id]["score"]
 
+        # Добавляем баллы за текущую локацию в общий счёт
+        user_data[user_id]["total_score"] += location_score
+
         await query.message.reply_text(
             f"Викторина завершена!\n"
             f"Ваш счёт за локацию: {location_score}\n"
