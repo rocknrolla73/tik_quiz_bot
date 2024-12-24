@@ -2,6 +2,16 @@ import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
+# Названия баров
+bar_names = {
+    "bar1": "Line Brew",
+    "bar2": "AMBER",
+    "bar3": "STORY",
+    "bar4": "PlatformA",
+    "bar5": "French 42",
+    "bar6": "loopers"
+}
+
 # Вопросы по блокам
 questions_blocks = {
     "bar1": [
@@ -12,7 +22,22 @@ questions_blocks = {
         {"question": "Кто написал роман 'Война и мир'?", "options": ["Достоевский", "Пушкин", "Толстой", "Чехов"], "correct_option": 2},
         {"question": "Как называется столица Казахстана?", "options": ["Алматы", "Астана", "Шымкент", "Караганда"], "correct_option": 1}
     ],
-    # Добавьте остальные блоки для баров 3-8
+    "bar3": [
+        {"question": "Какой химический элемент обозначается символом 'O'?", "options": ["Кислород", "Азот", "Водород", "Кальций"], "correct_option": 0},
+        {"question": "В каком году закончилась Вторая мировая война?", "options": ["1941", "1945", "1946", "1950"], "correct_option": 1}
+    ],
+    "bar4": [
+        {"question": "Сколько хромосом у человека?", "options": ["23", "32", "46", "64"], "correct_option": 2},
+        {"question": "Какой язык программирования используют для Telegram-ботов?", "options": ["Python", "C++", "Java", "Go"], "correct_option": 0}
+    ],
+    "bar5": [
+        {"question": "Как называется самая длинная река в мире?", "options": ["Амазонка", "Нил", "Янцзы", "Волга"], "correct_option": 1},
+        {"question": "Как зовут создателя компании Tesla?", "options": ["Стив Джобс", "Илон Маск", "Джефф Безос", "Билл Гейтс"], "correct_option": 1}
+    ],
+    "bar6": [
+        {"question": "Какая планета ближе всего к Солнцу?", "options": ["Земля", "Венера", "Марс", "Меркурий"], "correct_option": 3},
+        {"question": "В какой стране изобрели пиццу?", "options": ["Франция", "Италия", "Испания", "Греция"], "correct_option": 1}
+    ]
 }
 
 # Состояние пользователей
@@ -23,7 +48,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = context.args  # Получаем аргументы команды /start
     user_id = update.effective_user.id
 
-    # Если аргументы присутствуют
     if args:
         block_key = args[0]  # Аргумент (например, "bar1")
         if block_key in questions_blocks:
@@ -34,7 +58,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             user_data[user_id]["score"] = 0  # Счёт за текущую локацию
             user_data[user_id]["questions"] = questions_blocks[block_key]
 
-            await update.message.reply_text(f"Добро пожаловать! Викторина для заведения {block_key} активирована.")
+            bar_name = bar_names.get(block_key, "Unknown Bar")  # Получаем имя бара
+            await update.message.reply_text(f"Добро пожаловать в викторину для {bar_name}!")
             await send_question(update, context)
             return
 
@@ -80,7 +105,6 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     questions = user_data[user_id]["questions"]
     question_data = questions[current_question_index]
 
-    # Проверяем правильность ответа
     if user_response == question_data["correct_option"]:
         user_data[user_id]["score"] += 1
         await query.edit_message_text(f"Правильно! Ваш текущий счёт за локацию: {user_data[user_id]['score']}")
@@ -89,18 +113,16 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"Неверно. Правильный ответ: {question_data['options'][question_data['correct_option']]}"
         )
 
-    # Если есть ещё вопросы
     if current_question_index + 1 < len(questions):
         user_data[user_id]["current_question"] += 1
         await send_question(query, context)
     else:
-        # Завершаем викторину для локации
         user_data[user_id]["total_score"] += user_data[user_id]["score"]  # Обновляем общий счёт
         total_score = user_data[user_id]["total_score"]  # Общий счёт
         location_score = user_data[user_id]["score"]  # Счёт за текущую локацию
 
         await query.message.reply_text(
-            f"Викторина завершена! Ваш счёт за локацию: {location_score}\n"
+            f"Викторина для текущей локации завершена! Ваш счёт за локацию: {location_score}\n"
             f"Общий счёт за все локации: {total_score}"
         )
 
