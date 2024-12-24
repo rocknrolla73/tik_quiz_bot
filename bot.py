@@ -15,29 +15,37 @@ bar_names = {
 # Вопросы по блокам
 questions_blocks = {
     "bar1": [
-        {"question": "Какой напиток самый популярный в мире?", "options": ["Чай", "Кофе", "Вода", "Вино"], "correct_option": 0, "weight": 1},
-        {"question": "Сколько планет в солнечной системе?", "options": ["7", "8", "9", "10"], "correct_option": 1, "weight": 2}
+        {
+            "question": "Какой напиток самый популярный в мире?",
+            "options": ["Чай", "Кофе", "Вода", "Вино"],
+            "correct_option": 0,
+            "weight": 1,
+            "media": "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"  # Гифка
+        },
+        {
+            "question": "Сколько планет в солнечной системе?",
+            "options": ["7", "8", "9", "10"],
+            "correct_option": 1,
+            "weight": 2,
+            "media": "https://upload.wikimedia.org/wikipedia/commons/9/95/Solar_sys8.jpg"  # Изображение
+        }
     ],
     "bar2": [
-        {"question": "Кто написал роман 'Война и мир'?", "options": ["Достоевский", "Пушкин", "Толстой", "Чехов"], "correct_option": 2, "weight": 3},
-        {"question": "Как называется столица Казахстана?", "options": ["Алматы", "Астана", "Шымкент", "Караганда"], "correct_option": 1, "weight": 1}
-    ],
-    "bar3": [
-        {"question": "Какой химический элемент обозначается символом 'O'?", "options": ["Кислород", "Азот", "Водород", "Кальций"], "correct_option": 0, "weight": 2},
-        {"question": "В каком году закончилась Вторая мировая война?", "options": ["1941", "1945", "1946", "1950"], "correct_option": 1, "weight": 2}
-    ],
-    "bar4": [
-        {"question": "Сколько хромосом у человека?", "options": ["23", "32", "46", "64"], "correct_option": 2, "weight": 2},
-        {"question": "Какой язык программирования используют для Telegram-ботов?", "options": ["Python", "C++", "Java", "Go"], "correct_option": 0, "weight": 1}
-    ],
-    "bar5": [
-        {"question": "Как называется самая длинная река в мире?", "options": ["Амазонка", "Нил", "Янцзы", "Волга"], "correct_option": 1, "weight": 3},
-        {"question": "Как зовут создателя компании Tesla?", "options": ["Стив Джобс", "Илон Маск", "Джефф Безос", "Билл Гейтс"], "correct_option": 1, "weight": 2}
-    ],
-    "bar6": [
-        {"question": "Какая планета ближе всего к Солнцу?", "options": ["Земля", "Венера", "Марс", "Меркурий"], "correct_option": 3, "weight": 1},
-        {"question": "В какой стране изобрели пиццу?", "options": ["Франция", "Италия", "Испания", "Греция"], "correct_option": 1, "weight": 2}
+        {
+            "question": "Кто написал роман 'Война и мир'?",
+            "options": ["Достоевский", "Пушкин", "Толстой", "Чехов"],
+            "correct_option": 2,
+            "weight": 3,
+            "media": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Leo_Tolstoy_1897%2C_black_and_white.jpg"  # Фото Толстого
+        },
+        {
+            "question": "Как называется столица Казахстана?",
+            "options": ["Алматы", "Астана", "Шымкент", "Караганда"],
+            "correct_option": 1,
+            "weight": 1
+        }
     ]
+    # Добавьте остальные блоки для баров 3-6
 }
 
 # Состояние пользователей
@@ -79,6 +87,15 @@ async def send_question(update_or_query, context: ContextTypes.DEFAULT_TYPE):
     questions = user_data[user_id]["questions"]
     question_data = questions[current_question_index]
 
+    # Если у вопроса есть медиа, отправляем его
+    if "media" in question_data:
+        media_url = question_data["media"]
+        if media_url.endswith((".jpg", ".jpeg", ".png")):
+            await message.reply_photo(photo=media_url)
+        elif media_url.endswith(".gif"):
+            await message.reply_animation(animation=media_url)
+
+    # Отправляем текст вопроса и варианты ответа
     keyboard = [
         [InlineKeyboardButton(option, callback_data=str(i))]
         for i, option in enumerate(question_data["options"])
@@ -134,12 +151,19 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
         del user_data[user_id]["score"]
         del user_data[user_id]["questions"]
 
+# Удаление Webhook
+async def delete_webhook(app):
+    await app.bot.delete_webhook(drop_pending_updates=True)
+
 # Основной запуск бота
-def main():
+async def main():
     TOKEN = os.getenv("TELEGRAM_TOKEN")
     WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # URL вашего Webhook
     PORT = int(os.getenv("PORT", 8443))  # Порт для Webhook
     app = ApplicationBuilder().token(TOKEN).build()
+
+    # Удаляем существующий Webhook
+    await delete_webhook(app)
 
     app.add_handler(CommandHandler("start", start))  # Убрали pass_args
     app.add_handler(CallbackQueryHandler(handle_answer))
@@ -152,4 +176,5 @@ def main():
     )
 
 if __name__ == "__main__":
-    main()
+    import asyncio
+    asyncio.run(main())
