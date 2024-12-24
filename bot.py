@@ -28,7 +28,7 @@ questions_blocks = {
             "options": ["7", "8", "9", "10"],
             "correct_option": 1,
             "weight": 2,
-            "media": "https://museum-21.su/upload/iblock/a2d/cu5nmj88d9uahq2bdxi3bxx7x6ut5qaa.jpg"
+            "media": "https://upload.wikimedia.org/wikipedia/commons/9/95/Solar_sys8.jpg"
         }
     ],
     "bar2": [
@@ -37,7 +37,7 @@ questions_blocks = {
             "options": ["Достоевский", "Пушкин", "Толстой", "Чехов"],
             "correct_option": 2,
             "weight": 3,
-            "media": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Lev_Nikolayevich_Tolstoy_in_1910_by_Vladimir_Chertkov.jpg/548px-Lev_Nikolayevich_Tolstoy_in_1910_by_Vladimir_Chertkov.jpg"
+            "media": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Leo_Tolstoy_1897%2C_black_and_white.jpg"
         },
         {
             "question": "Как называется столица Казахстана?",
@@ -77,7 +77,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if block_key in questions_blocks:
             user_data[user_id]["current_question"] = 0
             user_data[user_id]["score"] = 0
-            user_data[user_id]["fastest_user"] = None
+            user_data[user_id]["total_time"] = 0.0  # Общее время на локации
             user_data[user_id]["fastest_time"] = float("inf")
             user_data[user_id]["questions"] = questions_blocks[block_key]
 
@@ -147,6 +147,9 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     question_start_time = user_data[user_id].get("question_start_time")
     time_taken = (answer_time - question_start_time).total_seconds()
 
+    # Добавляем время в общий счётчик
+    user_data[user_id]["total_time"] += time_taken
+
     # Проверяем правильность ответа
     if user_response == question_data["correct_option"]:
         points = question_data.get("weight", 1)
@@ -161,28 +164,23 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"Ваше время ответа: {time_taken:.2f} секунд."
         )
 
-    # Обновляем самого быстрого игрока
-    if time_taken < user_data[user_id]["fastest_time"]:
-        user_data[user_id]["fastest_time"] = time_taken
-        user_data[user_id]["fastest_user"] = user_id
-
     if current_question_index + 1 < len(questions):
         user_data[user_id]["current_question"] += 1
         await send_question(query, context)
     else:
-        fastest_user_id = user_data[user_id]["fastest_user"]
-        fastest_time = user_data[user_id]["fastest_time"]
-        fastest_user_name = user_data[fastest_user_id]["username"]
+        total_time = user_data[user_id]["total_time"]  # Суммарное время
+        location_score = user_data[user_id]["score"]
 
         await query.message.reply_text(
             f"Викторина завершена!\n"
-            f"Ваш счёт за локацию: {user_data[user_id]['score']}\n"
-            f"Самый быстрый игрок: {fastest_user_name} ({fastest_time:.2f} секунд)."
+            f"Ваш счёт за локацию: {location_score}\n"
+            f"Общее время на ответы: {total_time:.2f} секунд."
         )
 
         # Очищаем данные текущей локации
         del user_data[user_id]["current_question"]
         del user_data[user_id]["questions"]
+        del user_data[user_id]["total_time"]
 
 # Основной запуск бота
 def main():
