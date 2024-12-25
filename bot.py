@@ -17,18 +17,24 @@ bar_names = {
 questions_blocks = {
     "bar1": [
         {
-            "question": "Какой напиток самый популярный в мире?",
-            "options": ["Чай", "Кофе", "Вода", "Вино"],
+            "question": "В каком году был основан бренд *Christopher Ward?*",
+            "options": ["2005", "2010", "2000", "1995"],
             "correct_option": 0,
-            "weight": 1,
-            "media": "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"
+            "weight": 2,
+            "media": "https://upload.wikimedia.org/wikipedia/en/9/9d/Christopher_Ward_London_Logo.png"
         },
         {
-            "question": "Сколько планет в солнечной системе?",
-            "options": ["7", "8", "9", "10"],
+            "question": "В каком городе находится главная штаб-квартира *Christopher Ward?*",
+            "options": ["Нью-Йорк, США", "Лондон, Великобритания", "Женеве, Швейцария", "Цюрих, Швейцария"],
             "correct_option": 1,
-            "weight": 2,
-            "media": "https://museum-21.su/upload/iblock/a2d/cu5nmj88d9uahq2bdxi3bxx7x6ut5qaa.jpg"
+            "weight": 1,
+            "media": "https://media.giphy.com/media/1BhFiWpMigCnWnRMAG/giphy.gif"
+        },
+        {
+            "question": "Какая самая известная модель часов, выпущенная Christopher Ward в 2009 году, которая стала их визитной карточкой?",
+            "options": ["C60 Trident", "C5 Malvern", "C1 Grand Malvern", "C7 Rapide"],
+            "correct_option": 0,
+            "weight": 2
         }
     ]
 }
