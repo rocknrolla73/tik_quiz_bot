@@ -52,11 +52,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "username": user_name
         }
         await update.message.reply_text(
-            f"Привет, {user_name}! Вы успешно зарегистрированы. Начинаем викторину!"
+            f"Привет, {user_name}! Вы успешно зарегистрированы. Начнем игру!"
         )
     else:
         await update.message.reply_text(
-            "Добро пожаловать обратно! Начинаем викторину!"
+            "_Добро пожаловать обратно! Продолжаем игру!_"
         )
 
     # Проверяем наличие аргумента для запуска викторины
@@ -70,13 +70,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             user_data[user_id]["questions"] = questions_blocks[block_key]
 
             bar_name = bar_names.get(block_key, "Unknown Bar")
-            await update.message.reply_text(f"Начинаем викторину для {bar_name}!")
+            await update.message.reply_text(f"Начинаем игру в *{bar_name}*!")
             await send_question(update, context)
             return
 
     # Если аргумент отсутствует или неверен
     await update.message.reply_text(
-        "Для начала викторины отсканируйте QR-код или используйте правильную ссылку."
+        "Для начала игры отсканируйте QR-код."
     )
 
 # Отправка текущего вопроса
@@ -143,7 +143,7 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
         points = question_data.get("weight", 1)
         user_data[user_id]["score"] += points
         await query.edit_message_text(
-            f"Правильно! Вы заработали {points} баллов.\n"
+            f"Правильно! Вы получили *{points} баллов*.\n"
             f"Ваше время ответа: {time_taken:.2f} секунд."
         )
     else:
@@ -163,8 +163,8 @@ async def handle_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_data[user_id]["total_score"] += location_score
 
         await query.message.reply_text(
-            f"Викторина завершена!\n"
-            f"Ваш счёт за локацию: {location_score}\n"
+            f"Уровень пройден!\n"
+            f"Ваш счёт на локации: {location_score}\n"
             f"Общее время на ответы: {total_time:.2f} секунд."
         )
 
