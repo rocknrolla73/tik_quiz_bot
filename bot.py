@@ -8,7 +8,7 @@ bar_names = {
     "bar1": "Line Brew",
     "bar2": "AMBER",
     "bar3": "STORY",
-    "bar4": "PlatformA",
+    "bar4": "KUMANO",
     "bar5": "French 42",
     "bar6": "loopers"
 }
@@ -129,7 +129,55 @@ questions_blocks = {
             "correct_option": 3,
             "weight": 1
         }
-    ]
+    ],
+    "bar4": [
+        {
+            "question": "Какое достижение Rolex связано с пересечением Ла-Манша в 1927 году?",
+            "options": ["Разработка часов, устойчивых к высоким температурам", "Успешное испытание водонепроницаемых часов Oyster", "Установка нового рекорда в измерении времени", "1972"],
+            "correct_option": 2,
+            "weight": 1,
+            "media": "https://www.omegawatches.com/chronicle/img/template/mobile/1962/1962-the-omega-speedmaster-worn-in-space-by-wally-schirra.jpg"
+        },
+        {
+            "question": "Какая модель Rolex была первой, оснащённой функцией автоматического изменения даты?",
+            "options": [
+                "Oyster Perpetual",
+                "Day-Date",
+                "Datejust",
+                "Explorer"
+            ],
+            "correct_option": 2,
+            "weight": 2
+        },
+        {
+            "question": "Какой калибр Rolex считается первым официально сертифицированным автоматическим хронографом?",
+            "options": [
+                "Калибр 3135",
+                "Калибр 4130",
+                "Калибр 3235",
+                "Калибр 4030"
+            ],
+            "correct_option": 3,
+            "weight": 2
+        },
+        {
+            "question": "Какая модель Rolex впервые была выпущена специально для профессиональных пилотов?",
+            "options": [
+                "Air-King",
+                "Submariner",
+                "GMT-Master",
+                "Explorer II"
+            ],
+            "correct_option": 2,
+            "weight": 2
+        },
+        {
+            "question": " Какая особенность отличает Rolex Deepsea от других моделей для дайвинга?",
+            "options": ["Кклапан для глубоководных погружений", "Водонепроницаемость до 12 000 метров", "Использование титана для корпуса", "Механизм ручного завода"],
+            "correct_option": 0,
+            "weight": 2
+        }
+    ],
     "bar5": [
         {
             "question": "В фильме “Американский психопат” Патрик Бэйтман носит Rolex Datejust. Какой его любимый коктейль?",
