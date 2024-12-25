@@ -25,35 +25,27 @@ questions_blocks = {
         },
         {
             "question": "В каком городе находится главная штаб-квартира Christopher Ward?",
-            "options": ["Нью-Йорк, США", "Лондон, Великобритания", "Женеве, Швейцария", "Цюрих, Швейцария"],
+            "options": ["Нью-Йорк, США", "Лондон, Великобритания", "Женева, Швейцария", "Цюрих, Швейцария"],
             "correct_option": 1,
             "weight": 1,
             "media": "https://media.giphy.com/media/1BhFiWpMigCnWnRMAG/giphy.gif"
         },
         {
-            "question": "Какая самая известная модель часов, выпущенная Christopher Ward в 2009 году, которая стала их визитной карточкой?",
+            "question": "Какая самая известная модель часов, выпущенная Christopher Ward в 2009 году?",
             "options": ["C60 Trident", "C5 Malvern", "C1 Grand Malvern", "C7 Rapide"],
             "correct_option": 0,
             "weight": 2
         },
         {
-question_text = (
-            "В 2019 году Christopher Ward представил модель C65, которая вдохновлена историческим дизайном. "
-            "Какой уникальной деталью отличалась эта модель в плане водозащиты?\n\n"
-            "1. Подводный эквалайзер, регулирующий давление внутри корпуса\n"
-            "2. Водозащита до 600 метров с уникальной системой герметизации\n"
-            "3. Поворотный водозащитный кольцевой механизм с двойным уплотнением\n"
-            "4. Водозащита до 150 метров с герметичной задней крышкой, выполненной из сапфирового стекла"
-        )
-# Кнопки с номерами вариантов
-keyboard = [
-    [InlineKeyboardButton("1", callback_data="0")],
-    [InlineKeyboardButton("2", callback_data="1")],
-    [InlineKeyboardButton("3", callback_data="2")],
-    [InlineKeyboardButton("4", callback_data="3")]
-    ]
-# Отправка сообщения с текстом вопроса и кнопками
-await message.reply_text(question_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode="MarkdownV2")
+            "question": "В 2019 году Christopher Ward представил модель C65, которая вдохновлена историческим дизайном. Какой уникальной деталью отличалась эта модель в плане водозащиты?",
+            "options": [
+                "Подводный эквалайзер, регулирующий давление внутри корпуса",
+                "Водозащита до 600 метров с уникальной системой герметизации",
+                "Поворотный водозащитный кольцевой механизм с двойным уплотнением",
+                "Водозащита до 150 метров с герметичной задней крышкой, выполненной из сапфирового стекла"
+            ],
+            "correct_option": 2,
+            "weight": 3
         },
         {
             "question": "Какой фразой Christopher Ward проиллюстрировал свой принцип ценовой политики?",
@@ -78,15 +70,15 @@ await message.reply_text(question_text, reply_markup=InlineKeyboardMarkup(keyboa
         },
         {
             "question": "В каком культовом фильме 1960-х годов использовались часы Hamilton, что стало одним из самых знаменитых их кинопоявлений?",
-            "options": ["Челюсти", "Доктор Стрейнджлав, или Как я научился не волноваться и полюбил атомную бомбу", "2001 год: Космическая одиссея", "День независимости"],
-            "correct_option": 1,
+            "options": ["Челюсти", "Доктор Стрейнджлав", "2001 год: Космическая одиссея", "День независимости"],
+            "correct_option": 2,
             "weight": 2
         },
         {
             "question": "В какой известной серии фильмов о Джеймсе Бонде использовались часы Hamilton, а именно модель Ventura?",
             "options": ["Шаровая молния", "Доктор Ноу", "Голдфингер", "Живые и мертвые"],
             "correct_option": 1,
-            "weight": 2,
+            "weight": 2
         },
         {
             "question": "Какой президент США носил часы Hamilton во время своей инаугурации в 1961 году?",
@@ -105,22 +97,36 @@ await message.reply_text(question_text, reply_markup=InlineKeyboardMarkup(keyboa
         },
         {
             "question": "Какая версия Omega Speedmaster была впервые выпущена с обновленным механизмом Caliber 3861, который стал выдерживать магнитные поля?",
-            "options": ["Omega Speedmaster Professional *Snoopy Award*", "Omega Speedmaster *Moonwatch* 50th Anniversary", "Omega Speedmaster Professional *Apollo 11 50th Anniversary*", "Omega Speedmaster Professional *Silver Snoopy Award*"],
+            "options": [
+                "Omega Speedmaster Professional *Snoopy Award*",
+                "Omega Speedmaster *Moonwatch* 50th Anniversary",
+                "Omega Speedmaster Professional *Apollo 11 50th Anniversary*",
+                "Omega Speedmaster Professional *Silver Snoopy Award*"
+            ],
             "correct_option": 1,
-            "weight": 2,
-            "media": "https://calibercorner.com/wp-content/uploads/2022/12/omega-cal-3861-speedmaster-42mm-31063425001001.jpg"
+            "weight": 2
         },
         {
             "question": "В чем уникальность модификации Omega Speedmaster *Dark Side of the Moon*, выпущенной в 2013 году?",
-            "options": ["Корпус выполнен из алюминия, а не из стали", "Использование керамического корпуса, а также новых антибликовых покрытий на стекле", "Применение солнечных панелей для зарядки механизма", "Включение в дизайн модели элементов, вдохновленных лунными модулями NASA"],
+            "options": [
+                "Корпус выполнен из алюминия, а не из стали",
+                "Использование керамического корпуса, а также новых антибликовых покрытий на стекле",
+                "Применение солнечных панелей для зарядки механизма",
+                "Включение в дизайн модели элементов, вдохновленных лунными модулями NASA"
+            ],
             "correct_option": 1,
             "weight": 2
         },
         {
             "question": "Какая особенность модели Omega × Swatch Speedmaster MoonSwatch Mission To The Moonphase отличает ее от других моделей в коллекции MoonSwatch?",
-            "options": ["Она использует уникальный механизм с автоматическим подзаводом", "Фазы Луны отображаются через специальное окно на циферблате", "Применение специального покрытия на стекле для имитации лунного пейзажа", "Корпус выполнен в формате *полярной* версии, с белым и серебристым оттенком"],
+            "options": [
+                "Она использует уникальный механизм с автоматическим подзаводом",
+                "Фазы Луны отображаются через специальное окно на циферблате",
+                "Применение специального покрытия на стекле для имитации лунного пейзажа",
+                "Корпус выполнен в формате *полярной* версии, с белым и серебристым оттенком"
+            ],
             "correct_option": 1,
-            "weight": 1,
+            "weight": 1
         },
         {
             "question": "Какой бренд часов использует для своего циферблата останки корпуса от ракеты Союз MC-09, который произвел взлет в космос с Байконура?",
@@ -130,7 +136,6 @@ await message.reply_text(question_text, reply_markup=InlineKeyboardMarkup(keyboa
         }
     ]
 }
-
 # Состояние пользователей
 user_data = {}
 
@@ -154,7 +159,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
     else:
         await update.message.reply_text(
-            "_Добро пожаловать обратно! Продолжаем игру!_"
+            "Добро пожаловать обратно! Продолжаем игру!"
         )
 
     # Проверяем наличие аргумента для запуска викторины
@@ -305,9 +310,6 @@ def main():
         port=PORT,
         webhook_url=WEBHOOK_URL
     )
-
-if __name__ == "__main__":
-    main()
 
 if __name__ == "__main__":
     main()
