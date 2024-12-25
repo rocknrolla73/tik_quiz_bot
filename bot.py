@@ -84,38 +84,52 @@ questions_blocks = {
     ],
     "bar3": [
         {
-            "question": "В каком году Omega Speedmaster был выбран NASA как официальные часы для космонавтов?",
+            "question": "В каком году Omega Speedmaster был выбран NASA?",
             "options": ["1957", "1962", "1965", "1972"],
             "correct_option": 2,
             "weight": 1,
             "media": "https://www.omegawatches.com/chronicle/img/template/mobile/1962/1962-the-omega-speedmaster-worn-in-space-by-wally-schirra.jpg"
         },
         {
-            "question": "Какая версия Omega Speedmaster была впервые выпущена с обновленным механизмом Caliber 3861, который стал выдерживать магнитные поля?",
-            "options": ["Omega Speedmaster Professional *Snoopy Award*", "Omega Speedmaster *Moonwatch* 50th Anniversary", "Omega Speedmaster Professional *Apollo 11 50th Anniversary*", "Omega Speedmaster Professional *Silver Snoopy Award*"],
-            "correct_option": 1,
-            "weight": 2,
-            "media": "https://calibercorner.com/wp-content/uploads/2022/12/omega-cal-3861-speedmaster-42mm-31063425001001.jpg"
-        },
-        {
-            "question": "В чем уникальность модификации Omega Speedmaster *Dark Side of the Moon*, выпущенной в 2013 году?",
-            "options": ["Корпус выполнен из алюминия, а не из стали", "Использование керамического корпуса, а также новых антибликовых покрытий на стекле", "Применение солнечных панелей для зарядки механизма", "Включение в дизайн модели элементов, вдохновленных лунными модулями NASA"],
+            "question": "Какая версия Omega Speedmaster получила механизм Caliber 3861?",
+            "options": [
+                "Snoopy Award",
+                "Moonwatch 50th Anniversary",
+                "Apollo 11 Anniversary",
+                "Silver Snoopy Award"
+            ],
             "correct_option": 1,
             "weight": 2
         },
         {
-            "question": "Какая особенность модели Omega × Swatch Speedmaster MoonSwatch Mission To The Moonphase отличает ее от других моделей в коллекции MoonSwatch?",
-            "options": ["Она использует уникальный механизм с автоматическим подзаводом", "Фазы Луны отображаются через специальное окно на циферблате", "Применение специального покрытия на стекле для имитации лунного пейзажа", "Корпус выполнен в формате *полярной* версии, с белым и серебристым оттенком"],
+            "question": "Чем уникальна Omega Dark Side of the Moon (2013)?",
+            "options": [
+                "Алюминиевый корпус",
+                "Керамический корпус с антибликом",
+                "Солнечные панели",
+                "Элементы от лунных модулей NASA"
+            ],
             "correct_option": 1,
-            "weight": 1,
+            "weight": 2
         },
         {
-            "question": "Какой бренд часов использует для своего циферблата останки корпуса от ракеты Союз MC-09, который произвел взлет в космос с Байконура?",
+            "question": "Особенность Omega × Swatch MoonSwatch?",
+            "options": [
+                "Автоподзавод",
+                "Фазы Луны на циферблате",
+                "Покрытие имитирует Луну",
+                "Полярный бело-серебристый корпус"
+            ],
+            "correct_option": 1,
+            "weight": 1
+        },
+        {
+            "question": "Какой бренд использует фрагменты ракеты Союз MC-09?",
             "options": ["Fortis", "Omega", "Space Marine", "Werenbach"],
             "correct_option": 3,
             "weight": 1
         }
-    ],
+    ]
     "bar5": [
         {
             "question": "В фильме “Американский психопат” Патрик Бэйтман носит Rolex Datejust. Какой его любимый коктейль?",
