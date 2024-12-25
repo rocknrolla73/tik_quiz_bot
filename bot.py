@@ -17,14 +17,14 @@ bar_names = {
 questions_blocks = {
     "bar1": [
         {
-            "question": "В каком году был основан бренд *Christopher Ward?*",
+            "question": "В каком году был основан бренд Christopher Ward?",
             "options": ["2005", "2010", "2000", "1995"],
             "correct_option": 0,
             "weight": 2,
             "media": "https://upload.wikimedia.org/wikipedia/en/9/9d/Christopher_Ward_London_Logo.png"
         },
         {
-            "question": "В каком городе находится главная штаб-квартира *Christopher Ward?*",
+            "question": "В каком городе находится главная штаб-квартира Christopher Ward?",
             "options": ["Нью-Йорк, США", "Лондон, Великобритания", "Женеве, Швейцария", "Цюрих, Швейцария"],
             "correct_option": 1,
             "weight": 1,
@@ -35,6 +35,85 @@ questions_blocks = {
             "options": ["C60 Trident", "C5 Malvern", "C1 Grand Malvern", "C7 Rapide"],
             "correct_option": 0,
             "weight": 2
+        },
+        {
+            "question": "В 2019 году Christopher Ward представил модель C65, которая вдохновлена историческим дизайном. Какой уникальной деталью отличалась эта модель в плане водозащиты?",
+            "options": ["Подводный эквалайзер, регулирующий давление внутри корпуса", "Водозащита до 600 метров с уникальной системой герметизации", "Поворотный водозащитный кольцевой механизм с двойным уплотнением", "Водозащита до 150 метров с герметичной задней крышкой, выполненной из сапфирового стекла"],
+            "correct_option": 2,
+            "weight": 3,
+        },
+        {
+            "question": "Какой фразой Christopher Ward проиллюстрировал свой принцип ценовой политики?",
+            "options": ["Часы — это не только техника, но и искусство", "Мы продаём часы, а не имена", "Время — это деньги, но часы — это стиль", "Часы для тех, кто понимает"],
+            "correct_option": 1,
+            "weight": 1
+        }
+    ],
+    "bar2": [
+        {
+            "question": "В каком году была основана компания Hamilton Watch Company?",
+            "options": ["1865", "1892", "1914", "1925"],
+            "correct_option": 1,
+            "weight": 2,
+            "media": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Hamilton_pocketwatch.jpg/1920px-Hamilton_pocketwatch.jpg"
+        },
+        {
+            "question": "В каком городе в США была основана компания Hamilton?",
+            "options": ["Нью-Йорк, США", "Чикаго", "Ланкастер, Пенсильвания", "Сиэтл"],
+            "correct_option": 2,
+            "weight": 2
+        },
+        {
+            "question": "В каком культовом фильме 1960-х годов использовались часы Hamilton, что стало одним из самых знаменитых их кинопоявлений?",
+            "options": ["Челюсти", "Доктор Стрейнджлав, или Как я научился не волноваться и полюбил атомную бомбу", "2001 год: Космическая одиссея", "День независимости"],
+            "correct_option": 1,
+            "weight": 2
+        },
+        {
+            "question": "В какой известной серии фильмов о Джеймсе Бонде использовались часы Hamilton, а именно модель Ventura?",
+            "options": ["Шаровая молния", "Доктор Ноу", "Голдфингер", "Живые и мертвые"],
+            "correct_option": 1,
+            "weight": 2,
+        },
+        {
+            "question": "Какой президент США носил часы Hamilton во время своей инаугурации в 1961 году?",
+            "options": ["Джон Кеннеди", "Линдон Джонсон", "Ричард Никсон", "Дуайт Эйзенхауэр"],
+            "correct_option": 0,
+            "weight": 1
+        }
+    ],
+    "bar3": [
+        {
+            "question": "В каком году Omega Speedmaster был выбран NASA как официальные часы для космонавтов?",
+            "options": ["1957", "1962", "1965", "1972"],
+            "correct_option": 2,
+            "weight": 1,
+            "media": "https://www.omegawatches.com/chronicle/img/template/mobile/1962/1962-the-omega-speedmaster-worn-in-space-by-wally-schirra.jpg"
+        },
+        {
+            "question": "Какая версия Omega Speedmaster была впервые выпущена с обновленным механизмом Caliber 3861, который стал выдерживать магнитные поля?",
+            "options": ["Omega Speedmaster Professional *Snoopy Award*", "Omega Speedmaster *Moonwatch* 50th Anniversary", "Omega Speedmaster Professional *Apollo 11 50th Anniversary*", "Omega Speedmaster Professional *Silver Snoopy Award*"],
+            "correct_option": 1,
+            "weight": 2,
+            "media": "https://calibercorner.com/wp-content/uploads/2022/12/omega-cal-3861-speedmaster-42mm-31063425001001.jpg"
+        },
+        {
+            "question": "В чем уникальность модификации Omega Speedmaster *Dark Side of the Moon*, выпущенной в 2013 году?",
+            "options": ["Корпус выполнен из алюминия, а не из стали", "Использование керамического корпуса, а также новых антибликовых покрытий на стекле", "Применение солнечных панелей для зарядки механизма", "Включение в дизайн модели элементов, вдохновленных лунными модулями NASA"],
+            "correct_option": 1,
+            "weight": 2
+        },
+        {
+            "question": "Какая особенность модели Omega × Swatch Speedmaster MoonSwatch Mission To The Moonphase отличает ее от других моделей в коллекции MoonSwatch?",
+            "options": ["Она использует уникальный механизм с автоматическим подзаводом", "Фазы Луны отображаются через специальное окно на циферблате", "Применение специального покрытия на стекле для имитации лунного пейзажа", "Корпус выполнен в формате *полярной* версии, с белым и серебристым оттенком"],
+            "correct_option": 1,
+            "weight": 1,
+        },
+        {
+            "question": "Какой бренд часов использует для своего циферблата останки корпуса от ракеты Союз MC-09, который произвел взлет в космос с Байконура?",
+            "options": ["Fortis", "Omega", "Space Marine", "Werenbach"],
+            "correct_option": 3,
+            "weight": 1
         }
     ]
 }
@@ -213,6 +292,9 @@ def main():
         port=PORT,
         webhook_url=WEBHOOK_URL
     )
+
+if __name__ == "__main__":
+    main()
 
 if __name__ == "__main__":
     main()
